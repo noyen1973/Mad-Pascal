@@ -185,7 +185,7 @@ asm
     sta MULU_A
     stz MULU_A+1
 
-    lda #system.ScreenWidth
+    lda MAIN.SYSTEM.ScreenWidth
     sta MULU_B
     stz MULU_B+1
 
