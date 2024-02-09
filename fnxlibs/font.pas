@@ -7,14 +7,14 @@ interface
 
 uses f256;
 
-procedure Init(idx: byte; addr: word); assembler;
+procedure Init(idx: byte; addr: word); register; assembler;
 
 
 // ------------------------------------
 implementation
 // ------------------------------------
 
-procedure Init(idx: byte; addr: word); assembler;
+procedure Init(idx: byte; addr: word); register; assembler;
 // var
 //     fnt: ^byte absolute $C000;
 //     src: ^byte;
@@ -43,30 +43,25 @@ asm
         ldx #@iopagectrl(iopPage1)
         stx IOPAGE_CTRL
 
-        lda #>(addr+3)
-        sta tempzp+1
-        lda #<(addr+3)
-        sta tempzp
-
-        lda #>$C000
-        sta tempzp+3
-        lda #<$C000
-        sta tempzp+2
-
-        ldx #$03
-_1      ldy #$FF
-_2      lda (tempzp),Y
-        sta (tempzp+2),Y
-
-        dey
-        cpy #$FF
-        bne _2
-
-        inc tempzp+1
-        inc tempzp+3
-
+        lda :edx
+        asl
+        asl
+        asl
+        ora #>FONT_MEMORY_BANK0
+        sta :edx+1
+        lda #<FONT_MEMORY_BANK0
+        sta :edx
+        ldx #8
+        ldy #0
+_1
+        lda (:ecx),y
+        sta (:edx),y
+        iny
+        bne _1
+        inc :ecx+1
+        inc :edx+1
         dex
-        bpl _1
+        bne _1
 
         ply
         sty IOPAGE_CTRL
