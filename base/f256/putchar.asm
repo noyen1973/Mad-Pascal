@@ -71,7 +71,7 @@ _next1  lda CursorColumn
         bra _next1
 
 _chkRow lda MASTER_CTRL_H
-        and #@masterctrlh(mcTextDoubleX)        ; check screen mode for double-x (40 or 80 columns)
+        and #@masterctrlh(mcTextDoubleY)        ; check screen mode for double-y (30 or 60 rows)
         beq _2
 
         ldx #30
